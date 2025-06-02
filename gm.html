@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BioBoom GM Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { font-size: 24px; }
+    label, select, textarea, input { display: block; margin: 10px 0; width: 100%; }
+    button { margin-top: 10px; padding: 10px 15px; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+    th { background-color: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <h1>🧑‍🏫 BioBoom Game Master Dashboard</h1>
+
+  <label for="scenario">Set Scenario:</label>
+  <input type="text" id="scenario" placeholder="e.g., Recession, Policy Shift" />
+
+  <label for="policyNote">Policy Note (optional):</label>
+  <textarea id="policyNote" rows="3"></textarea>
+
+  <button onclick="submitScenario()">📢 Broadcast Scenario</button>
+
+  <button onclick="generatePin()">🔐 Generate New Player PIN</button>
+  <p id="pinOutput"></p>
+
+  <h2>📊 Leaderboard</h2>
+  <div id="leaderboard"></div>
+
+  <h2>📥 Submissions</h2>
+  <div id="submissions"></div>
+
+  <script>
+    const API = 'https://bioboomserver.onrender.com';
+
+    function submitScenario() {
+      const scenario = document.getElementById('scenario').value;
+      const policyNote = document.getElementById('policyNote').value;
+
+      fetch(`${API}/scenario`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scenario, policyNote })
+      }).then(res => res.json()).then(() => {
+        alert('Scenario broadcasted!');
+      });
+    }
+
+    function generatePin() {
+      fetch(`${API}/generate-pin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      }).then(res => res.json()).then(data => {
+        document.getElementById('pinOutput').innerText = `PIN: ${data.pin} (expires: ${data.expires})`;
+      });
+    }
+
+    function refreshLeaderboard() {
+      fetch(`${API}/leaderboard`).then(res => res.json()).then(data => {
+        const html = '<table><tr><th>Player</th><th>Score</th></tr>' +
+          data.map(row => `<tr><td>${row.name}</td><td>${row.score}</td></tr>`).join('') + '</table>';
+        document.getElementById('leaderboard').innerHTML = html;
+      });
+    }
+
+    function refreshSubmissions() {
+      fetch(`${API}/submissions`).then(res => res.json()).then(data => {
+        let html = '<table><tr><th>Player</th><th>Inputs</th></tr>';
+        for (const playerId in data) {
+          const inputs = data[playerId].map((x, i) => `#${i+1}: ${JSON.stringify(x)}`).join('<br>');
+          html += `<tr><td>${playerId}</td><td>${inputs}</td></tr>`;
+        }
+        html += '</table>';
+        document.getElementById('submissions').innerHTML = html;
+      });
+    }
+
+    setInterval(refreshLeaderboard, 5000);
+    setInterval(refreshSubmissions, 5000);
+  </script>
+</body>
+</html>
