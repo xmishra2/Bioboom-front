@@ -2,15 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BioBoom GM</title>
   <style>
     body { font-family: sans-serif; padding: 1rem; max-width: 800px; margin: auto; }
-    input, textarea, button, select { display: block; width: 100%; margin: 10px 0; padding: 10px; }
+    input, textarea, button { display: block; width: 100%; margin: 10px 0; padding: 10px; }
     h2 { margin-top: 2rem; }
-    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background-color: #f2f2f2; }
+    pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; }
   </style>
 </head>
 <body>
@@ -23,28 +21,23 @@
     }
   </script>
 
-  <h2>🧐 Game Master Dashboard</h2>
+  <h2>🧠 Game Master Dashboard</h2>
 
   <button onclick="generatePin()">🔁 Generate New Player PIN</button>
   <p id="pinDisplay"></p>
 
-  <h2>🎲 Set Scenario & Policy</h2>
-  <label for="scenarioSelect">Choose Scenario:</label>
-  <select id="scenarioSelect">
-    <option value="Recession">Recession</option>
-    <option value="Boom">Boom</option>
-    <option value="Tech Breakthrough">Tech Breakthrough</option>
-    <option value="Policy Shift">Policy Shift</option>
-    <option value="Carbon Tax">Carbon Tax</option>
-  </select>
-
-  <label for="policyNote">Tip for Players (Policy Note):</label>
-  <textarea id="policyNote" placeholder="e.g., Focus on TRL upgrades or reduce externalities..."></textarea>
+  <h2>🎲 Set Scenario</h2>
+  <input id="scenario" placeholder="e.g., Recession, Boom..." />
+  <textarea id="policyNote" placeholder="Add any policy notes..."></textarea>
   <button onclick="setScenario()">🚀 Launch Scenario</button>
 
   <h2>📊 Submissions</h2>
   <button onclick="loadSubmissions()">🔄 Refresh Submissions</button>
-  <div id="submissionsBox">Waiting for player inputs...</div>
+  <pre id="submissionsBox">Waiting for player inputs...</pre>
+
+  <h2>📤 Export & Reset</h2>
+  <button onclick="exportData()">📁 Export Submissions (CSV)</button>
+  <button onclick="resetGame()">♻️ Reset Game</button>
 
   <script>
     const API = 'https://bioboomserver.onrender.com';
@@ -59,33 +52,55 @@
     }
 
     function setScenario() {
-      const scenario = document.getElementById('scenarioSelect').value;
+      const scenario = document.getElementById('scenario').value;
       const policyNote = document.getElementById('policyNote').value;
       fetch(`${API}/scenario`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ scenario, policyNote })
-      }).then(() => alert("✅ Scenario set for this round!"));
+      }).then(() => alert("Scenario set!"));
     }
 
     function loadSubmissions() {
       fetch(`${API}/submissions`)
         .then(res => res.json())
         .then(data => {
-          if (!data || Object.keys(data).length === 0) {
-            document.getElementById('submissionsBox').innerText = '❗ No player submissions yet.';
-          } else {
-            let html = '';
-            for (let player in data) {
-              html += `<h3>👤 ${player}</h3><table><tr><th>Sector</th><th>Strategy</th><th>TRL</th><th>MRL</th><th>Units</th><th>Target</th><th>ESG</th><th>Feedback</th></tr>`;
-              data[player].forEach(entry => {
-                html += `<tr><td>${entry.sector}</td><td>${entry.strategy}</td><td>${entry.trl}</td><td>${entry.mrl}</td><td>${entry.units}</td><td>${entry.target}</td><td>${entry.esg}</td><td>${entry.feedback}</td></tr>`;
-              });
-              html += '</table>';
-            }
-            document.getElementById('submissionsBox').innerHTML = html;
-          }
+          document.getElementById('submissionsBox').innerText =
+            JSON.stringify(data, null, 2);
         });
+    }
+
+    function exportData() {
+      fetch(`${API}/submissions`)
+        .then(res => res.json())
+        .then(data => {
+          let csv = 'Player,Sector,Strategy,TRL,MRL,Units,Target,ESG,Feedback\n';
+          for (const player in data) {
+            data[player].forEach(sub => {
+              csv += `${player},${sub.sector},${sub.strategy},${sub.trl},${sub.mrl},${sub.units},${sub.target},${sub.esg},"${sub.feedback}"\n`;
+            });
+          }
+          const blob = new Blob([csv], { type: 'text/csv' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `BioBoom_Submissions_${new Date().toISOString().slice(0,10)}.csv`;
+          a.click();
+          URL.revokeObjectURL(url);
+        });
+    }
+
+    function resetGame() {
+      if (confirm("⚠️ Are you sure you want to reset the game? This will erase all submissions.")) {
+        fetch(`${API}/scenario`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ scenario: null, policyNote: "" })
+        }).then(() => {
+          alert("✅ Game reset. All submissions cleared.");
+          document.getElementById('submissionsBox').innerText = "Waiting for player inputs...";
+        });
+      }
     }
   </script>
 </body>
