@@ -3,97 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BioBoom Player</title>
+  <title>BioBoom Login</title>
   <style>
-    body { font-family: sans-serif; padding: 1rem; max-width: 600px; margin: auto; }
-    input, select, button { display: block; width: 100%; margin: 10px 0; padding: 10px; }
-    label { margin-top: 15px; font-weight: bold; }
-    .feedback { background: #f0f0f0; padding: 1rem; margin-top: 1rem; }
+    body {
+      font-family: sans-serif;
+      background: #f7f7f7;
+      padding: 2rem;
+      max-width: 500px;
+      margin: auto;
+      text-align: center;
+    }
+    h2 { color: #333; }
+    select, input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 1rem;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
   </style>
 </head>
 <body>
-  <h2>🌱 BioBoom Player Interface</h2>
+  <h2>🔐 BioBoom Login</h2>
 
-  <label for="playerId">Your Name:</label>
-  <input id="playerId" placeholder="Enter your name" />
+  <label for="role">Login As:</label>
+  <select id="role">
+    <option value="gm">Game Master</option>
+    <option value="player">Player</option>
+  </select>
 
   <label for="pin">PIN:</label>
-  <input id="pin" placeholder="Enter game PIN" />
+  <input id="pin" placeholder="Enter PIN" />
 
-  <button onclick="authenticate()">🔓 Join Game</button>
-
-  <div id="gameForm" style="display:none;">
-    <label for="sector">Sector:</label>
-    <select id="sector">
-      <option>Bioenergy</option>
-      <option>Biopharma</option>
-      <option>Forestry</option>
-      <option>Agrobiotech</option>
-    </select>
-
-    <label for="strategy">Innovation Strategy:</label>
-    <input id="strategy" placeholder="e.g., Disruptive, Incremental" />
-
-    <label for="trl">TRL (0–4):</label>
-    <input type="number" id="trl" min="0" max="4" />
-
-    <label for="mrl">MRL (0–4):</label>
-    <input type="number" id="mrl" min="0" max="4" />
-
-    <label for="units">Units:</label>
-    <input type="number" id="units" />
-
-    <label for="target">Target Market:</label>
-    <input id="target" placeholder="e.g., Local, EU, Global" />
-
-    <button onclick="submitForm()">📤 Submit</button>
-
-    <div class="feedback" id="responseBox"></div>
-  </div>
+  <button onclick="login()">Login</button>
 
   <script>
     const API = 'https://bioboomserver.onrender.com';
-    let playerId = '', pin = '';
 
-    function authenticate() {
-      playerId = document.getElementById('playerId').value;
-      pin = document.getElementById('pin').value;
+    function login() {
+      const role = document.getElementById('role').value;
+      const pin = document.getElementById('pin').value.trim();
+
+      if (!pin) return alert("Please enter a valid PIN.");
+
       fetch(`${API}/auth`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role: 'player', pin })
-      }).then(res => res.json()).then(data => {
+        body: JSON.stringify({ role, pin })
+      })
+      .then(res => res.json())
+      .then(data => {
         if (data.success) {
-          document.getElementById('gameForm').style.display = 'block';
+          sessionStorage.setItem('role', role);
+          sessionStorage.setItem('pin', pin);
+          if (role === 'gm') {
+            window.location.href = 'gm.html';
+          } else {
+            window.location.href = 'player.html';
+          }
         } else {
           alert('❌ Invalid PIN');
         }
       });
-    }
-
-    function submitForm() {
-      const data = {
-        sector: document.getElementById('sector').value,
-        strategy: document.getElementById('strategy').value,
-        trl: parseInt(document.getElementById('trl').value),
-        mrl: parseInt(document.getElementById('mrl').value),
-        units: parseInt(document.getElementById('units').value),
-        target: document.getElementById('target').value
-      };
-
-      fetch(`${API}/submit`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId, data })
-      })
-        .then(res => res.json())
-        .then(result => {
-          if (result.success) {
-            document.getElementById('responseBox').innerHTML = `✅ ESG: ${result.esg}<br>${result.feedback}`;
-          } else {
-            document.getElementById('responseBox').innerHTML = `❌ ${result.message}`;
-          }
-        });
     }
   </script>
 </body>
