@@ -6,7 +6,7 @@
   <title>BioBoom GM</title>
   <style>
     body { font-family: sans-serif; padding: 1rem; max-width: 800px; margin: auto; }
-    input, textarea, button { display: block; width: 100%; margin: 10px 0; padding: 10px; }
+    input, select, textarea, button { display: block; width: 100%; margin: 10px 0; padding: 10px; }
     h2 { margin-top: 2rem; }
     pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; }
   </style>
@@ -27,8 +27,16 @@
   <p id="pinDisplay"></p>
 
   <h2>🎲 Set Scenario</h2>
-  <input id="scenario" placeholder="e.g., Recession, Boom..." />
-  <textarea id="policyNote" placeholder="Add any policy notes..."></textarea>
+  <label for="scenario">Select Scenario:</label>
+  <select id="scenario">
+    <option value="Recession">Recession</option>
+    <option value="Boom">Boom</option>
+    <option value="Carbon Tax">Carbon Tax</option>
+    <option value="Policy Shift">Policy Shift</option>
+    <option value="Tech Breakthrough">Tech Breakthrough</option>
+  </select>
+
+  <textarea id="policyNote" placeholder="Add any policy notes or strategy tips..."></textarea>
   <button onclick="setScenario()">🚀 Launch Scenario</button>
 
   <h2>📊 Submissions</h2>
