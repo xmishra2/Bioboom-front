@@ -6,7 +6,7 @@
   <title>BioBoom GM</title>
   <style>
     body { font-family: sans-serif; padding: 1rem; max-width: 800px; margin: auto; }
-    input, textarea, button { display: block; width: 100%; margin: 10px 0; padding: 10px; }
+    input, textarea, button, select { display: block; width: 100%; margin: 10px 0; padding: 10px; }
     h2 { margin-top: 2rem; }
     pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; }
   </style>
@@ -22,13 +22,22 @@
   </script>
 
   <h2>🧠 Game Master Dashboard</h2>
-  
+
   <button onclick="generatePin()">🔁 Generate New Player PIN</button>
   <p id="pinDisplay"></p>
 
-  <h2>🎲 Set Scenario</h2>
-  <input id="scenario" placeholder="e.g., Recession, Boom..." />
-  <textarea id="policyNote" placeholder="Add any policy notes..."></textarea>
+  <h2>🎲 Set Scenario & Policy</h2>
+  <label for="scenarioSelect">Choose Scenario:</label>
+  <select id="scenarioSelect">
+    <option value="Recession">Recession</option>
+    <option value="Boom">Boom</option>
+    <option value="Tech Breakthrough">Tech Breakthrough</option>
+    <option value="Policy Shift">Policy Shift</option>
+    <option value="Carbon Tax">Carbon Tax</option>
+  </select>
+
+  <label for="policyNote">Tip for Players (Policy Note):</label>
+  <textarea id="policyNote" placeholder="e.g., Focus on TRL upgrades or reduce externalities..."></textarea>
   <button onclick="setScenario()">🚀 Launch Scenario</button>
 
   <h2>📊 Submissions</h2>
@@ -48,13 +57,13 @@
     }
 
     function setScenario() {
-      const scenario = document.getElementById('scenario').value;
+      const scenario = document.getElementById('scenarioSelect').value;
       const policyNote = document.getElementById('policyNote').value;
       fetch(`${API}/scenario`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ scenario, policyNote })
-      }).then(() => alert("Scenario set!"));
+      }).then(() => alert("✅ Scenario set for this round!"));
     }
 
     function loadSubmissions() {
