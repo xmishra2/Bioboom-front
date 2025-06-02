@@ -13,6 +13,7 @@
     th { background: #eee; }
     .nav { margin-top: 20px; text-align: center; }
     .nav a { margin: 0 10px; text-decoration: none; color: #007bff; font-weight: bold; }
+    .event-box { background: #fff3cd; padding: 1rem; border-left: 5px solid #ffc107; margin-top: 1rem; }
   </style>
 </head>
 <body>
@@ -48,6 +49,8 @@
   <textarea id="policyNote" placeholder="Add any policy notes or strategy tips..."></textarea>
   <button onclick="setScenario()">🚀 Launch Scenario</button>
 
+  <div id="eventBox" class="event-box" style="display:none;"></div>
+
   <h2>📊 Submissions</h2>
   <button onclick="loadSubmissions()">🔄 Refresh Submissions</button>
   <div id="submissionsBox">Waiting for player inputs...</div>
@@ -75,7 +78,16 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ scenario, policyNote })
-      }).then(() => alert("Scenario set!"));
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert("Scenario set!");
+        if (data.event) {
+          const box = document.getElementById('eventBox');
+          box.style.display = 'block';
+          box.innerHTML = `🎲 <strong>Random Event:</strong> <em>${data.event.name}</em><br>${data.event.description}`;
+        }
+      });
     }
 
     function loadSubmissions() {
@@ -135,6 +147,7 @@
           .then(() => {
             alert("✅ Game reset. All submissions and leaderboard cleared.");
             document.getElementById('submissionsBox').innerHTML = "Waiting for player inputs...";
+            document.getElementById('eventBox').style.display = 'none';
           });
       }
     }
