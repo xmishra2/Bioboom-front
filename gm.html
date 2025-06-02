@@ -8,7 +8,9 @@
     body { font-family: sans-serif; padding: 1rem; max-width: 800px; margin: auto; }
     input, select, textarea, button { display: block; width: 100%; margin: 10px 0; padding: 10px; }
     h2 { margin-top: 2rem; }
-    pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background: #eee; }
   </style>
 </head>
 <body>
@@ -41,7 +43,7 @@
 
   <h2>📊 Submissions</h2>
   <button onclick="loadSubmissions()">🔄 Refresh Submissions</button>
-  <pre id="submissionsBox">Waiting for player inputs...</pre>
+  <div id="submissionsBox">Waiting for player inputs...</div>
 
   <h2>📤 Export & Reset</h2>
   <button onclick="exportData()">📁 Export Submissions (CSV)</button>
@@ -73,8 +75,30 @@
       fetch(`${API}/submissions`)
         .then(res => res.json())
         .then(data => {
-          document.getElementById('submissionsBox').innerText =
-            JSON.stringify(data, null, 2);
+          let html = '';
+          for (const player in data) {
+            html += `<h3>👤 ${player}</h3>`;
+            html += `
+              <table>
+                <tr>
+                  <th>Sector</th><th>Strategy</th><th>TRL</th><th>MRL</th><th>Units</th><th>Target</th><th>ESG</th><th>Feedback</th>
+                </tr>`;
+            data[player].forEach(sub => {
+              html += `
+                <tr>
+                  <td>${sub.sector}</td>
+                  <td>${sub.strategy}</td>
+                  <td>${sub.trl}</td>
+                  <td>${sub.mrl}</td>
+                  <td>${sub.units}</td>
+                  <td>${sub.target}</td>
+                  <td>${sub.esg}</td>
+                  <td>${sub.feedback}</td>
+                </tr>`;
+            });
+            html += `</table>`;
+          }
+          document.getElementById('submissionsBox').innerHTML = html || 'No submissions yet.';
         });
     }
 
@@ -106,7 +130,7 @@
           body: JSON.stringify({ scenario: null, policyNote: "" })
         }).then(() => {
           alert("✅ Game reset. All submissions cleared.");
-          document.getElementById('submissionsBox').innerText = "Waiting for player inputs...";
+          document.getElementById('submissionsBox').innerHTML = "Waiting for player inputs...";
         });
       }
     }
