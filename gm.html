@@ -11,6 +11,8 @@
     table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
     th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
     th { background: #eee; }
+    .nav { margin-top: 20px; text-align: center; }
+    .nav a { margin: 0 10px; text-decoration: none; color: #007bff; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -24,6 +26,11 @@
   </script>
 
   <h2>🧠 Game Master Dashboard</h2>
+
+  <div class="nav">
+    <a href="gm.html">Dashboard</a>
+    <a href="leaderboard.html" target="_blank">🏆 View Leaderboard</a>
+  </div>
 
   <button onclick="generatePin()">🔁 Generate New Player PIN</button>
   <p id="pinDisplay"></p>
