@@ -7,13 +7,12 @@
   <style>
     body {
       font-family: sans-serif;
-      background: #f7f7f7;
+      background: #f9f9f9;
       padding: 2rem;
-      max-width: 500px;
+      max-width: 400px;
       margin: auto;
       text-align: center;
     }
-    h2 { color: #333; }
     select, input, button {
       width: 100%;
       padding: 12px;
@@ -46,33 +45,34 @@
   <button onclick="login()">Login</button>
 
   <script>
-    const API = 'https://bioboomserver.onrender.com';
+    const API = 'https://bioboomserver.onrender.com'; // ✅ backend running here
 
     function login() {
       const role = document.getElementById('role').value;
       const pin = document.getElementById('pin').value.trim();
 
-      if (!pin) return alert("Please enter a valid PIN.");
+      if (!pin) return alert("Please enter your PIN.");
 
       fetch(`${API}/auth`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role, pin })
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          sessionStorage.setItem('role', role);
-          sessionStorage.setItem('pin', pin);
-          if (role === 'gm') {
-            window.location.href = 'gm.html';
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            sessionStorage.setItem('role', role);
+            sessionStorage.setItem('pin', pin);
+            if (role === 'gm') {
+              window.location.href = 'gm.html';
+            } else {
+              window.location.href = 'player.html';
+            }
           } else {
-            window.location.href = 'player.html';
+            alert("❌ Invalid PIN");
           }
-        } else {
-          alert('❌ Invalid PIN');
-        }
-      });
+        })
+        .catch(() => alert("❌ Network or server error"));
     }
   </script>
 </body>
