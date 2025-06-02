@@ -44,6 +44,11 @@
       overflow-y: auto;
       font-size: 0.9rem;
     }
+    .budget-box {
+      font-weight: bold;
+      color: green;
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -62,6 +67,8 @@
     <strong>Scenario:</strong> <span id="currentScenario">Loading...</span><br>
     <strong>Tip:</strong> <span id="currentTip">Loading...</span>
   </div>
+
+  <div class="budget-box">💰 Remaining Budget: €<span id="budgetDisplay">30000</span></div>
 
   <label for="playerId">Your Name:</label>
   <input id="playerId" placeholder="Enter your name" />
@@ -107,13 +114,14 @@
     const API = 'https://bioboomserver.onrender.com';
     let currentScenario = null;
     let previousLog = [];
+    let remainingBudget = 30000;
 
     const scenarioTips = {
       "Recession": "Focus on frugal innovation and cost-effective strategies.",
       "Boom": "Take risks and scale aggressively.",
       "Policy Shift": "Align your strategy with policy direction.",
       "Tech Breakthrough": "Invest in higher TRL to leverage breakthroughs.",
-      "Carbon Tax": "Minimize emissions and enhance ESG.",
+      "Carbon Tax": "Minimize emissions and enhance ESG."
     };
 
     fetch(`${API}/scenario`)
@@ -150,6 +158,12 @@
         if (result.success) {
           document.getElementById('responseBox').innerHTML =
             `✅ <strong>ESG Score:</strong> ${result.esg}<br>${result.feedback}`;
+
+          remainingBudget -= (data.units * (data.sector === 'Bioenergy' ? 100 :
+                                            data.sector === 'Biopharma' ? 120 :
+                                            data.sector === 'Forestry' ? 80 :
+                                            data.sector === 'Agrobiotech' ? 90 : 100));
+          document.getElementById('budgetDisplay').innerText = remainingBudget;
 
           previousLog.push(data);
           if (previousLog.length > 5) previousLog.shift();
