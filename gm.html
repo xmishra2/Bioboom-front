@@ -35,7 +35,7 @@
   <button onclick="generatePin()">🔁 Generate New Player PIN</button>
   <p id="pinDisplay"></p>
 
-  <h2>🎲 Set Scenario</h2>
+  <h2>🌟 Set Scenario</h2>
   <label for="scenario">Select Scenario:</label>
   <select id="scenario">
     <option value="Recession">Recession</option>
@@ -52,7 +52,7 @@
   <button onclick="loadSubmissions()">🔄 Refresh Submissions</button>
   <div id="submissionsBox">Waiting for player inputs...</div>
 
-  <h2>📤 Export & Reset</h2>
+  <h2>📄 Export & Reset</h2>
   <button onclick="exportData()">📁 Export Submissions (CSV)</button>
   <button onclick="resetGame()">♻️ Reset Game</button>
 
@@ -130,15 +130,12 @@
     }
 
     function resetGame() {
-      if (confirm("⚠️ Are you sure you want to reset the game? This will erase all submissions.")) {
-        fetch(`${API}/scenario`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ scenario: null, policyNote: "" })
-        }).then(() => {
-          alert("✅ Game reset. All submissions cleared.");
-          document.getElementById('submissionsBox').innerHTML = "Waiting for player inputs...";
-        });
+      if (confirm("⚠️ Are you sure you want to reset the game? This will erase all submissions AND leaderboard.")) {
+        fetch(`${API}/reset`, { method: 'POST' })
+          .then(() => {
+            alert("✅ Game reset. All submissions and leaderboard cleared.");
+            document.getElementById('submissionsBox').innerHTML = "Waiting for player inputs...";
+          });
       }
     }
   </script>
