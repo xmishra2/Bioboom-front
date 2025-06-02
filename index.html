@@ -1,32 +1,67 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BioBoom Game Hub</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BioBoom Login</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-    h1 { font-size: 2rem; margin-bottom: 30px; }
-    a {
-      display: block;
-      margin: 15px auto;
-      padding: 15px 25px;
-      width: 250px;
-      font-size: 1.2rem;
-      text-decoration: none;
-      background: #4CAF50;
-      color: white;
-      border-radius: 8px;
-      transition: background 0.3s;
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      max-width: 500px;
+      margin: auto;
     }
-    a:hover { background: #45a049; }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    h2 {
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <h1>🚀 BioBoom Game Portal</h1>
-  <a href="index.html">🔐 Login Page</a>
-  <a href="player.html">🎮 Player Interface</a>
-  <a href="gm.html">🧑‍🏫 Game Master Dashboard</a>
+  <h2>🔐 BioBoom Login</h2>
+
+  <label for="role">Select Role:</label>
+  <select id="role">
+    <option value="player">Player</option>
+    <option value="gm">Game Master</option>
+  </select>
+
+  <label for="pin">Enter PIN:</label>
+  <input id="pin" placeholder="Enter PIN"/>
+
+  <button onclick="login()">Login</button>
+
+  <script>
+    const API = 'https://bioboomserver.onrender.com';
+
+    function login() {
+      const pin = document.getElementById("pin").value.trim();
+      const role = document.getElementById("role").value;
+
+      if (!pin) return alert("Enter PIN first");
+
+      fetch(`${API}/auth`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pin, role })
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          if (role === "gm") {
+            window.location.href = "gm.html";
+          } else {
+            window.location.href = "player.html";
+          }
+        } else {
+          alert("❌ Invalid PIN");
+        }
+      });
+    }
+  </script>
 </body>
 </html>
