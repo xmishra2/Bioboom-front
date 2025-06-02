@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BioBoom Leaderboard</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1rem;
+      max-width: 600px;
+      margin: auto;
+      background-color: #f0f8ff;
+    }
+    h2 {
+      text-align: center;
+      color: #0077cc;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: center;
+    }
+    th {
+      background-color: #d9eaff;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f9ff;
+    }
+  </style>
+</head>
+<body>
+  <h2>🏆 BioBoom Leaderboard</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Player</th>
+        <th>ESG Score</th>
+      </tr>
+    </thead>
+    <tbody id="leaderboardBody">
+      <tr><td colspan="3">Loading...</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    const API = 'https://bioboomserver.onrender.com';
+
+    function loadLeaderboard() {
+      fetch(`${API}/leaderboard`)
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.getElementById('leaderboardBody');
+          tbody.innerHTML = '';
+          data.forEach((entry, index) => {
+            const row = `<tr>
+              <td>${index + 1}</td>
+              <td>${entry.name}</td>
+              <td>${entry.score}</td>
+            </tr>`;
+            tbody.innerHTML += row;
+          });
+        });
+    }
+
+    loadLeaderboard();
+    setInterval(loadLeaderboard, 5000); // Refresh every 5 seconds
+  </script>
+</body>
+</html>
