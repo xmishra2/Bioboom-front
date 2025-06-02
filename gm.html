@@ -8,7 +8,9 @@
     body { font-family: sans-serif; padding: 1rem; max-width: 800px; margin: auto; }
     input, textarea, button, select { display: block; width: 100%; margin: 10px 0; padding: 10px; }
     h2 { margin-top: 2rem; }
-    pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
   </style>
 </head>
 <body>
@@ -21,7 +23,7 @@
     }
   </script>
 
-  <h2>🧠 Game Master Dashboard</h2>
+  <h2>🧐 Game Master Dashboard</h2>
 
   <button onclick="generatePin()">🔁 Generate New Player PIN</button>
   <p id="pinDisplay"></p>
@@ -42,7 +44,7 @@
 
   <h2>📊 Submissions</h2>
   <button onclick="loadSubmissions()">🔄 Refresh Submissions</button>
-  <pre id="submissionsBox">Waiting for player inputs...</pre>
+  <div id="submissionsBox">Waiting for player inputs...</div>
 
   <script>
     const API = 'https://bioboomserver.onrender.com';
@@ -70,8 +72,19 @@
       fetch(`${API}/submissions`)
         .then(res => res.json())
         .then(data => {
-          document.getElementById('submissionsBox').innerText =
-            JSON.stringify(data, null, 2);
+          if (!data || Object.keys(data).length === 0) {
+            document.getElementById('submissionsBox').innerText = '❗ No player submissions yet.';
+          } else {
+            let html = '';
+            for (let player in data) {
+              html += `<h3>👤 ${player}</h3><table><tr><th>Sector</th><th>Strategy</th><th>TRL</th><th>MRL</th><th>Units</th><th>Target</th><th>ESG</th><th>Feedback</th></tr>`;
+              data[player].forEach(entry => {
+                html += `<tr><td>${entry.sector}</td><td>${entry.strategy}</td><td>${entry.trl}</td><td>${entry.mrl}</td><td>${entry.units}</td><td>${entry.target}</td><td>${entry.esg}</td><td>${entry.feedback}</td></tr>`;
+              });
+              html += '</table>';
+            }
+            document.getElementById('submissionsBox').innerHTML = html;
+          }
         });
     }
   </script>
