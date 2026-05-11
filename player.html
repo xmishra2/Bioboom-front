@@ -432,10 +432,14 @@ fetch(`${API}/scenario`)
     data.scenario || 'Not Set';
 
   document.getElementById(
-    'currentTip'
-  ).innerText =
+  'currentTip'
+).innerText =
 
-    data.policyNote || 'No policy note';
+  data.policyNote ||
+
+  scenarioTips[data.scenario] ||
+
+  'No policy note available.';
 
 });
 
