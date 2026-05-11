@@ -1,76 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BioBoom Leaderboard</title>
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0"/>
+
+  <title>BioBoom Strategic Leaderboard</title>
+
   <style>
+
     body {
-      font-family: sans-serif;
+
+      font-family: Arial, sans-serif;
+
       padding: 1rem;
-      max-width: 600px;
+
+      max-width: 1200px;
+
       margin: auto;
-      background-color: #f0f8ff;
+
+      background-color: #f4f6f8;
     }
+
     h2 {
+
       text-align: center;
+
       color: #0077cc;
+
+      margin-bottom: 2rem;
     }
+
     table {
+
       width: 100%;
+
       border-collapse: collapse;
-      margin-top: 1rem;
+
+      background: white;
     }
-    th, td {
+
+    th,
+    td {
+
       border: 1px solid #ccc;
+
       padding: 12px;
+
       text-align: center;
     }
+
     th {
+
       background-color: #d9eaff;
     }
+
     tr:nth-child(even) {
-      background-color: #f2f9ff;
+
+      background-color: #f8fbff;
     }
+
+    .top {
+
+      background-color: #d4edda !important;
+
+      font-weight: bold;
+    }
+
+    .system-box {
+
+      background: #d1ecf1;
+
+      border-left: 5px solid #17a2b8;
+
+      padding: 1rem;
+
+      margin-bottom: 2rem;
+    }
+
   </style>
+
 </head>
+
 <body>
-  <h2>🏆 BioBoom Leaderboard</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Rank</th>
-        <th>Player</th>
-        <th>ESG Score</th>
-      </tr>
-    </thead>
-    <tbody id="leaderboardBody">
-      <tr><td colspan="3">Loading...</td></tr>
-    </tbody>
-  </table>
 
-  <script>
-    const API = 'https://bioboomserver.onrender.com';
+<h2>
+🏆 BioBoom Strategic Leaderboard
+</h2>
 
-    function loadLeaderboard() {
-      fetch(`${API}/leaderboard`)
-        .then(res => res.json())
-        .then(data => {
-          const tbody = document.getElementById('leaderboardBody');
-          tbody.innerHTML = '';
-          data.forEach((entry, index) => {
-            const row = `<tr>
-              <td>${index + 1}</td>
-              <td>${entry.name}</td>
-              <td>${entry.score}</td>
-            </tr>`;
-            tbody.innerHTML += row;
-          });
-        });
-    }
+<div class="system-box">
 
-    loadLeaderboard();
-    setInterval(loadLeaderboard, 5000); // Refresh every 5 seconds
-  </script>
+<strong>Leaderboard Logic</strong><br><br>
+
+Players are ranked based on:
+
+<ul>
+
+<li>
+Average systemic coherence
+</li>
+
+<li>
+Sustainability alignment
+</li>
+
+<li>
+Innovation capability
+</li>
+
+<li>
+Strategic resilience
+</li>
+
+</ul>
+
+The system rewards quality and coherence rather than submission quantity.
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Rank</th>
+
+<th>Player</th>
+
+<th>Avg Coherence</th>
+
+<th>Avg ESG</th>
+
+<th>Avg Innovation</th>
+
+<th>Avg Resilience</th>
+
+<th>Submissions</th>
+
+</tr>
+
+</thead>
+
+<tbody id="leaderboardBody">
+
+<tr>
+
+<td colspan="7">
+Loading leaderboard...
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<script>
+
+const API =
+  'https://bioboomserver.onrender.com';
+
+// --------------------------------------------------
+// LOAD LEADERBOARD
+// --------------------------------------------------
+
+function loadLeaderboard() {
+
+  fetch(`${API}/leaderboard`)
+
+  .then(res => res.json())
+
+  .then(data => {
+
+    const tbody =
+      document.getElementById('leaderboardBody');
+
+    tbody.innerHTML = '';
+
+    data.forEach((entry, index) => {
+
+      const row =
+        document.createElement('tr');
+
+      if (index === 0) {
+
+        row.classList.add('top');
+
+      }
+
+      row.innerHTML =
+
+      `
+      <td>
+        ${index + 1}
+      </td>
+
+      <td>
+        ${entry.name}
+      </td>
+
+      <td>
+        ${entry.coherence}
+      </td>
+
+      <td>
+        ${entry.esg}
+      </td>
+
+      <td>
+        ${entry.innovation}
+      </td>
+
+      <td>
+        ${entry.resilience}
+      </td>
+
+      <td>
+        ${entry.submissions}
+      </td>
+      `;
+
+      tbody.appendChild(row);
+
+    });
+
+  })
+
+  .catch(error => {
+
+    document.getElementById('leaderboardBody').innerHTML =
+
+    `
+    <tr>
+      <td colspan="7">
+        Failed to load leaderboard.
+      </td>
+    </tr>
+    `;
+
+    console.error(error);
+
+  });
+
+}
+
+// --------------------------------------------------
+// INITIAL LOAD
+// --------------------------------------------------
+
+loadLeaderboard();
+
+// --------------------------------------------------
+// AUTO REFRESH
+// --------------------------------------------------
+
+setInterval(loadLeaderboard, 5000);
+
+</script>
+
 </body>
+
 </html>
