@@ -367,28 +367,41 @@ const scenarioTips = {
 // LOAD SCENARIO
 // --------------------------------------------------
 
-fetch(`${API}/scenario`)
+async function loadScenario() {
 
-.then(res => res.json())
+  try {
 
-.then(data => {
+    const response = await fetch(`${API}/scenario`);
 
-  document.getElementById(
-    'currentScenario'
-  ).innerText =
+    const data = await response.json();
 
-    data.scenario || 'Not Set';
+    console.log("Scenario Data:", data);
 
-  document.getElementById(
-    'currentTip'
-  ).innerText =
+    document.getElementById("currentScenario").innerText =
+      data.scenario || "Not Set";
 
-    data.policyNote ||
+    document.getElementById("currentTip").innerText =
+      data.policyNote ||
+      scenarioTips[data.scenario] ||
+      "No policy note available.";
 
-    scenarioTips[data.scenario] ||
+  }
 
-    'No policy note available.';
-});
+  catch (error) {
+
+    console.error("Scenario Load Error:", error);
+
+    document.getElementById("currentScenario").innerText =
+      "Connection Error";
+
+    document.getElementById("currentTip").innerText =
+      "Backend connection failed.";
+
+  }
+
+}
+
+loadScenario();
 
 // --------------------------------------------------
 // SUBMIT
