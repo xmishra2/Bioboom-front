@@ -1,182 +1,404 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BioBoom Player</title>
+
   <style>
     body {
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
       padding: 1rem;
-      max-width: 600px;
+      max-width: 700px;
       margin: auto;
-      background: #f9f9f9;
+      background: #f4f6f8;
     }
-    input, select, button {
-      display: block;
-      width: 100%;
-      margin: 10px 0;
-      padding: 10px;
-      font-size: 1rem;
+
+    h2 {
+      text-align: center;
     }
+
     label {
       margin-top: 15px;
+      display: block;
       font-weight: bold;
     }
+
+    small {
+      color: #555;
+      display: block;
+      margin-top: 2px;
+      margin-bottom: 5px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .scenario-box {
+      background: #fff3cd;
+      border-left: 5px solid #ffc107;
+      padding: 12px;
+      margin-bottom: 15px;
+    }
+
+    .budget-box {
+      background: #d4edda;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-left: 5px solid #28a745;
+      font-weight: bold;
+    }
+
     .feedback {
       background: #e9ecef;
       padding: 1rem;
       margin-top: 1rem;
       border-left: 5px solid #007bff;
     }
-    .scenario-box {
-      background: #fff3cd;
-      border-left: 5px solid #ffc107;
-      padding: 10px;
-      margin: 10px 0;
-    }
+
     .log-box {
-      background: #f8f9fa;
+      background: white;
+      border: 1px solid #ccc;
       padding: 10px;
       margin-top: 1rem;
-      border: 1px solid #ccc;
-      max-height: 200px;
+      max-height: 250px;
       overflow-y: auto;
       font-size: 0.9rem;
     }
-    .budget-box {
-      font-weight: bold;
-      color: green;
-      margin-bottom: 1rem;
-    }
   </style>
 </head>
+
 <body>
-  <script>
-    const role = sessionStorage.getItem('role');
-    const pin = sessionStorage.getItem('pin');
-    if (role !== 'player' || !pin) {
-      alert("Access denied. Please login as Player.");
-      window.location.href = "login.html";
+
+<script>
+  const role = sessionStorage.getItem('role');
+  const pin = sessionStorage.getItem('pin');
+
+  if (role !== 'player' || !pin) {
+    alert("Access denied. Please login as Player.");
+    window.location.href = "login.html";
+  }
+</script>
+
+<h2>🎮 BioBoom Player Interface</h2>
+
+<div class="scenario-box">
+  <strong>Scenario:</strong>
+  <span id="currentScenario">Loading...</span><br>
+
+  <strong>Policy Tip:</strong>
+  <span id="currentTip">Loading...</span>
+</div>
+
+<div class="budget-box">
+  💰 Remaining Budget:
+  €<span id="budgetDisplay">30000</span>
+</div>
+
+<label for="playerId">Your Name</label>
+<input id="playerId" placeholder="Enter your name" />
+
+<!-- SECTOR -->
+
+<label for="sector">Sector</label>
+
+<small>
+Sector represents the industrial ecosystem and value-chain structure.
+</small>
+
+<select id="sector">
+  <option>Precision Biopharma</option>
+  <option>Sustainable Materials</option>
+  <option>Industrial Fermentation</option>
+  <option>Bioenergy Systems</option>
+  <option>Circular Packaging</option>
+  <option>Regenerative Agriculture</option>
+  <option>Waste Biorefineries</option>
+  <option>Blue Bioeconomy</option>
+  <option>BioDigital Platforms & Intelligence Systems</option>
+  <option>Cellular & Synthetic Bioeconomy</option>
+</select>
+
+<!-- STRATEGY -->
+
+<label for="strategy">Innovation Strategy</label>
+
+<small>
+Innovation strategy represents the firm's adaptation pathway.
+</small>
+
+<select id="strategy">
+  <option>Breakthrough Innovation</option>
+  <option>Incremental Optimization</option>
+  <option>Circular Innovation</option>
+  <option>Platform & Ecosystem Expansion</option>
+  <option>Cost Leadership & Scale</option>
+  <option>Adaptive Resilience Strategy</option>
+</select>
+
+<!-- TARGET -->
+
+<label for="target">Target Market</label>
+
+<small>
+Target market affects regulation, ESG pressure, and scaling complexity.
+</small>
+
+<select id="target">
+  <option>European Union</option>
+  <option>Local Market</option>
+  <option>Global South</option>
+</select>
+
+<!-- TRL -->
+
+<label for="trl">Technology Readiness Level (TRL)</label>
+
+<small>
+TRL measures technological maturity and commercialization readiness.
+</small>
+
+<input type="number" id="trl" min="0" max="4" />
+
+<!-- MRL -->
+
+<label for="mrl">Manufacturing Readiness Level (MRL)</label>
+
+<small>
+MRL measures operational and production scalability.
+</small>
+
+<input type="number" id="mrl" min="0" max="4" />
+
+<!-- CIRCULARITY -->
+
+<label for="circularity">Circularity Level</label>
+
+<small>
+Circularity measures sustainability and resource-loop integration.
+</small>
+
+<select id="circularity">
+  <option>Low</option>
+  <option>Medium</option>
+  <option>High</option>
+</select>
+
+<!-- UNITS BUCKET -->
+
+<label for="unitsBucket">Production Scale</label>
+
+<small>
+Production scale reflects economies of scale and operational intensity.
+</small>
+
+<select id="unitsBucket">
+  <option>Pilot</option>
+  <option>Small Scale</option>
+  <option>Medium Scale</option>
+  <option>Large Scale</option>
+  <option>Industrial Scale</option>
+</select>
+
+<button onclick="submitForm()">
+  📤 Submit Strategy
+</button>
+
+<div class="feedback" id="responseBox">
+  Awaiting submission...
+</div>
+
+<div class="log-box" id="submissionLog">
+  Previous submissions will appear here.
+</div>
+
+<script>
+
+const API = 'https://bioboomserver.onrender.com';
+
+let currentScenario = null;
+let previousLog = [];
+let remainingBudget = 30000;
+
+const scaleCost = {
+  "Pilot": 2000,
+  "Small Scale": 5000,
+  "Medium Scale": 10000,
+  "Large Scale": 20000,
+  "Industrial Scale": 30000
+};
+
+const scenarioTips = {
+  "Recession": "Focus on resilience and operational efficiency.",
+  "Boom": "Expand strategically and scale production.",
+  "Carbon Pricing Transition": "Prioritize circularity and ESG alignment.",
+  "Trade Protection Escalation": "Strengthen local supply chains.",
+  "Credit Liquidity Crunch": "Avoid overexpansion and preserve flexibility.",
+  "Tech Breakthrough": "Leverage innovation and advanced readiness."
+};
+
+fetch(`${API}/scenario`)
+  .then(res => res.json())
+  .then(data => {
+
+    document.getElementById('currentScenario').innerText =
+      data.scenario || 'Not set';
+
+    document.getElementById('currentTip').innerText =
+      data.policyNote ||
+      scenarioTips[data.scenario] ||
+      'No guidance available';
+
+    currentScenario = data.scenario;
+  });
+
+function submitForm() {
+
+  const playerId =
+    document.getElementById('playerId').value.trim();
+
+  if (!playerId) {
+    return alert("Please enter your name.");
+  }
+
+  const data = {
+
+    sector:
+      document.getElementById('sector').value,
+
+    strategy:
+      document.getElementById('strategy').value,
+
+    target:
+      document.getElementById('target').value,
+
+    trl:
+      parseInt(document.getElementById('trl').value),
+
+    mrl:
+      parseInt(document.getElementById('mrl').value),
+
+    circularity:
+      document.getElementById('circularity').value,
+
+    unitsBucket:
+      document.getElementById('unitsBucket').value
+  };
+
+  const cost = scaleCost[data.unitsBucket];
+
+  if (remainingBudget - cost < 0) {
+    return alert("Insufficient budget remaining.");
+  }
+
+  fetch(`${API}/submit`, {
+
+    method: 'POST',
+
+    headers: {
+      'Content-Type': 'application/json'
+    },
+
+    body: JSON.stringify({
+      playerId,
+      data
+    })
+
+  })
+
+  .then(res => res.json())
+
+  .then(result => {
+
+    if (result.success) {
+
+      remainingBudget -= cost;
+
+      document.getElementById('budgetDisplay').innerText =
+        remainingBudget;
+
+      document.getElementById('responseBox').innerHTML =
+
+      `
+      ✅ <strong>Coherence Score:</strong> ${result.coherenceScore || "Pending"}<br><br>
+
+      🌱 <strong>ESG:</strong> ${result.esg || "Pending"}<br>
+
+      🧠 <strong>Innovation:</strong> ${result.innovation || "Pending"}<br>
+
+      🛡️ <strong>Resilience:</strong> ${result.resilience || "Pending"}<br>
+
+      🆔 <strong>Scenario ID:</strong> ${result.scenarioID || "Pending"}<br><br>
+
+      💬 ${result.feedback || "No feedback yet"}
+      `;
+
+      previousLog.push(data);
+
+      if (previousLog.length > 5) {
+        previousLog.shift();
+      }
+
+      document.getElementById('submissionLog').innerHTML =
+
+        previousLog.map((entry, i) =>
+
+        `
+        #${i + 1}
+        ➤ ${entry.sector}
+        |
+        ${entry.strategy}
+        |
+        TRL:${entry.trl}
+        |
+        MRL:${entry.mrl}
+        |
+        Circularity:${entry.circularity}
+        |
+        Scale:${entry.unitsBucket}
+        |
+        Target:${entry.target}
+        `
+
+      ).join('<br><br>');
+
     }
-  </script>
 
-  <h2>🎮 BioBoom Player Interface</h2>
+    else {
 
-  <div class="scenario-box">
-    <strong>Scenario:</strong> <span id="currentScenario">Loading...</span><br>
-    <strong>Tip:</strong> <span id="currentTip">Loading...</span>
-  </div>
+      document.getElementById('responseBox').innerHTML =
 
-  <div class="budget-box">💰 Remaining Budget: €<span id="budgetDisplay">30000</span></div>
-
-  <label for="playerId">Your Name:</label>
-  <input id="playerId" placeholder="Enter your name" />
-
-  <label for="sector">Sector:</label>
-  <select id="sector">
-    <option>Bioenergy</option>
-    <option>Biopharma</option>
-    <option>Forestry</option>
-    <option>Agrobiotech</option>
-  </select>
-
-  <label for="strategy">Innovation Strategy:</label>
-  <select id="strategy">
-    <option>Disruptive</option>
-    <option>Incremental</option>
-    <option>Frugal</option>
-    <option>Platform-based</option>
-  </select>
-
-  <label for="trl">TRL (0–4):</label>
-  <input type="number" id="trl" min="0" max="4" />
-
-  <label for="mrl">MRL (0–4):</label>
-  <input type="number" id="mrl" min="0" max="4" />
-
-  <label for="units">Units:</label>
-  <input type="number" id="units" />
-
-  <label for="target">Target Market:</label>
-  <select id="target">
-    <option>Local</option>
-    <option>EU</option>
-    <option>Global</option>
-  </select>
-
-  <button onclick="submitForm()">📤 Submit</button>
-
-  <div class="feedback" id="responseBox"></div>
-  <div class="log-box" id="submissionLog">Previous submissions will appear here.</div>
-
-  <script>
-    const API = 'https://bioboomserver.onrender.com';
-    let currentScenario = null;
-    let previousLog = [];
-    let remainingBudget = 30000;
-
-    const scenarioTips = {
-      "Recession": "Focus on frugal innovation and cost-effective strategies.",
-      "Boom": "Take risks and scale aggressively.",
-      "Policy Shift": "Align your strategy with policy direction.",
-      "Tech Breakthrough": "Invest in higher TRL to leverage breakthroughs.",
-      "Carbon Tax": "Minimize emissions and enhance ESG."
-    };
-
-    fetch(`${API}/scenario`)
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('currentScenario').innerText = data.scenario || 'Not set';
-        const tip = data.policyNote || scenarioTips[data.scenario] || 'No tips available';
-        document.getElementById('currentTip').innerText = tip;
-        currentScenario = data.scenario;
-        previousLog = [];
-        document.getElementById('submissionLog').innerHTML = '';
-      });
-
-    function submitForm() {
-      const playerId = document.getElementById('playerId').value.trim();
-      if (!playerId) return alert("Please enter your name.");
-
-      const data = {
-        sector: document.getElementById('sector').value,
-        strategy: document.getElementById('strategy').value,
-        trl: parseInt(document.getElementById('trl').value),
-        mrl: parseInt(document.getElementById('mrl').value),
-        units: parseInt(document.getElementById('units').value),
-        target: document.getElementById('target').value
-      };
-
-      fetch(`${API}/submit`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId, data })
-      })
-      .then(res => res.json())
-      .then(result => {
-        if (result.success) {
-          document.getElementById('responseBox').innerHTML =
-            `✅ <strong>ESG Score:</strong> ${result.esg}<br>${result.feedback}`;
-
-          remainingBudget -= (data.units * (data.sector === 'Bioenergy' ? 100 :
-                                            data.sector === 'Biopharma' ? 120 :
-                                            data.sector === 'Forestry' ? 80 :
-                                            data.sector === 'Agrobiotech' ? 90 : 100));
-          document.getElementById('budgetDisplay').innerText = remainingBudget;
-
-          previousLog.push(data);
-          if (previousLog.length > 5) previousLog.shift();
-          document.getElementById('submissionLog').innerHTML = previousLog.map((entry, i) =>
-            `#${i + 1} ➤ ${entry.sector}, ${entry.strategy}, TRL:${entry.trl}, MRL:${entry.mrl}, Units:${entry.units}, Target:${entry.target}`
-          ).join('<br>');
-
-        } else {
-          document.getElementById('responseBox').innerHTML =
-            `❌ <strong>Error:</strong> ${result.message}`;
-        }
-      });
+      `
+      ❌ <strong>Error:</strong>
+      ${result.message}
+      `;
     }
-  </script>
+
+  });
+
+}
+
+</script>
+
 </body>
 </html>
+```
