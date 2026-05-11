@@ -584,11 +584,57 @@ function submitForm() {
 
       <br><br>
 
-      <strong>
-      Feedback:
-      </strong>
-      ${result.feedback}
-      `;
+      document.getElementById(
+  'responseBox'
+).innerHTML =
+
+`
+<strong>
+✅ Scenario ID:
+</strong>
+${result.scenarioID}
+
+<br><br>
+
+<strong>
+Coherence Score:
+</strong>
+${result.coherenceScore}
+
+<br><br>
+
+<strong>
+ESG Score:
+</strong>
+${result.esg}
+
+<br><br>
+
+<strong>
+Innovation Score:
+</strong>
+${result.innovation}
+
+<br><br>
+
+<strong>
+Resilience Score:
+</strong>
+${result.resilience}
+
+<hr>
+
+<pre style="
+white-space: pre-wrap;
+font-family: Arial, sans-serif;
+line-height: 1.5;
+font-size: 0.95rem;
+">
+
+${result.feedback}
+
+</pre>
+`;
 
       // -----------------------------
       // LOG
