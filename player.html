@@ -103,6 +103,17 @@
       font-size: 0.9rem;
     }
 
+    pre {
+
+      white-space: pre-wrap;
+
+      font-family: Arial, sans-serif;
+
+      line-height: 1.5;
+
+      font-size: 0.95rem;
+    }
+
   </style>
 
 </head>
@@ -135,15 +146,21 @@ if (role !== 'player' || !pin) {
 <div class="scenario-box">
 
   <strong>Scenario:</strong>
+
   <span id="currentScenario">
+
     Loading...
+
   </span>
 
   <br><br>
 
   <strong>Policy Note:</strong>
+
   <span id="currentTip">
+
     Loading...
+
   </span>
 
 </div>
@@ -162,9 +179,7 @@ Your Name
 <input id="playerId"
        placeholder="Enter your name" />
 
-<!-- ------------------------------------------------ -->
 <!-- SECTOR -->
-<!-- ------------------------------------------------ -->
 
 <label>
 Sector
@@ -172,51 +187,29 @@ Sector
 
 <select id="sector">
 
-<option>
-Precision Biopharma
-</option>
+<option>Precision Biopharma</option>
 
-<option>
-Sustainable Materials
-</option>
+<option>Sustainable Materials</option>
 
-<option>
-Industrial Fermentation
-</option>
+<option>Industrial Fermentation</option>
 
-<option>
-Bioenergy Systems
-</option>
+<option>Bioenergy Systems</option>
 
-<option>
-Circular Packaging
-</option>
+<option>Circular Packaging</option>
 
-<option>
-Regenerative Agriculture
-</option>
+<option>Regenerative Agriculture</option>
 
-<option>
-Waste Biorefineries
-</option>
+<option>Waste Biorefineries</option>
 
-<option>
-Blue Bioeconomy
-</option>
+<option>Blue Bioeconomy</option>
 
-<option>
-BioDigital Platforms & Intelligence Systems
-</option>
+<option>BioDigital Platforms & Intelligence Systems</option>
 
-<option>
-Cellular & Synthetic Bioeconomy
-</option>
+<option>Cellular & Synthetic Bioeconomy</option>
 
 </select>
 
-<!-- ------------------------------------------------ -->
 <!-- STRATEGY -->
-<!-- ------------------------------------------------ -->
 
 <label>
 Innovation Strategy
@@ -224,35 +217,21 @@ Innovation Strategy
 
 <select id="strategy">
 
-<option>
-Breakthrough Innovation
-</option>
+<option>Breakthrough Innovation</option>
 
-<option>
-Incremental Optimization
-</option>
+<option>Incremental Optimization</option>
 
-<option>
-Circular Innovation
-</option>
+<option>Circular Innovation</option>
 
-<option>
-Platform & Ecosystem Expansion
-</option>
+<option>Platform & Ecosystem Expansion</option>
 
-<option>
-Cost Leadership & Scale
-</option>
+<option>Cost Leadership & Scale</option>
 
-<option>
-Adaptive Resilience Strategy
-</option>
+<option>Adaptive Resilience Strategy</option>
 
 </select>
 
-<!-- ------------------------------------------------ -->
 <!-- TRL -->
-<!-- ------------------------------------------------ -->
 
 <label>
 TRL (0–4)
@@ -263,9 +242,7 @@ TRL (0–4)
        min="0"
        max="4" />
 
-<!-- ------------------------------------------------ -->
 <!-- MRL -->
-<!-- ------------------------------------------------ -->
 
 <label>
 MRL (0–4)
@@ -276,9 +253,7 @@ MRL (0–4)
        min="0"
        max="4" />
 
-<!-- ------------------------------------------------ -->
 <!-- CIRCULARITY -->
-<!-- ------------------------------------------------ -->
 
 <label>
 Circularity Level
@@ -286,23 +261,15 @@ Circularity Level
 
 <select id="circularity">
 
-<option>
-Low
-</option>
+<option>Low</option>
 
-<option>
-Medium
-</option>
+<option>Medium</option>
 
-<option>
-High
-</option>
+<option>High</option>
 
 </select>
 
-<!-- ------------------------------------------------ -->
 <!-- SCALE -->
-<!-- ------------------------------------------------ -->
 
 <label>
 Production Scale
@@ -310,31 +277,19 @@ Production Scale
 
 <select id="unitsBucket">
 
-<option>
-Pilot
-</option>
+<option>Pilot</option>
 
-<option>
-Small Scale
-</option>
+<option>Small Scale</option>
 
-<option>
-Medium Scale
-</option>
+<option>Medium Scale</option>
 
-<option>
-Large Scale
-</option>
+<option>Large Scale</option>
 
-<option>
-Industrial Scale
-</option>
+<option>Industrial Scale</option>
 
 </select>
 
-<!-- ------------------------------------------------ -->
 <!-- TARGET -->
-<!-- ------------------------------------------------ -->
 
 <label>
 Target Market
@@ -342,17 +297,11 @@ Target Market
 
 <select id="target">
 
-<option>
-European Union
-</option>
+<option>European Union</option>
 
-<option>
-Local Market
-</option>
+<option>Local Market</option>
 
-<option>
-Global South
-</option>
+<option>Global South</option>
 
 </select>
 
@@ -362,9 +311,7 @@ Global South
 
 </button>
 
-<!-- ------------------------------------------------ -->
 <!-- OUTPUT -->
-<!-- ------------------------------------------------ -->
 
 <div class="feedback"
      id="responseBox">
@@ -388,7 +335,8 @@ const API =
 let remainingBudget = 30000;
 
 let previousLog = [];
-  const scenarioTips = {
+
+const scenarioTips = {
 
   "Recession":
 
@@ -432,15 +380,14 @@ fetch(`${API}/scenario`)
     data.scenario || 'Not Set';
 
   document.getElementById(
-  'currentTip'
-).innerText =
+    'currentTip'
+  ).innerText =
 
-  data.policyNote ||
+    data.policyNote ||
 
-  scenarioTips[data.scenario] ||
+    scenarioTips[data.scenario] ||
 
-  'No policy note available.';
-
+    'No policy note available.';
 });
 
 // --------------------------------------------------
@@ -528,9 +475,7 @@ function submitForm() {
 
     if (result.success) {
 
-      // -----------------------------
       // UPDATE BUDGET
-      // -----------------------------
 
       remainingBudget =
         result.remainingBudget;
@@ -540,9 +485,7 @@ function submitForm() {
       ).innerText =
         remainingBudget;
 
-      // -----------------------------
       // RESPONSE BOX
-      // -----------------------------
 
       document.getElementById(
         'responseBox'
@@ -582,63 +525,16 @@ function submitForm() {
       </strong>
       ${result.resilience}
 
-      <br><br>
+      <hr>
 
-      document.getElementById(
-  'responseBox'
-).innerHTML =
-
-`
-<strong>
-✅ Scenario ID:
-</strong>
-${result.scenarioID}
-
-<br><br>
-
-<strong>
-Coherence Score:
-</strong>
-${result.coherenceScore}
-
-<br><br>
-
-<strong>
-ESG Score:
-</strong>
-${result.esg}
-
-<br><br>
-
-<strong>
-Innovation Score:
-</strong>
-${result.innovation}
-
-<br><br>
-
-<strong>
-Resilience Score:
-</strong>
-${result.resilience}
-
-<hr>
-
-<pre style="
-white-space: pre-wrap;
-font-family: Arial, sans-serif;
-line-height: 1.5;
-font-size: 0.95rem;
-">
+      <pre>
 
 ${result.feedback}
 
-</pre>
-`;
+      </pre>
+      `;
 
-      // -----------------------------
       // LOG
-      // -----------------------------
 
       previousLog.push({
 
