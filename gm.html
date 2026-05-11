@@ -1,156 +1,589 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BioBoom GM</title>
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0" />
+
+  <title>BioBoom GM Dashboard</title>
+
   <style>
-    body { font-family: sans-serif; padding: 1rem; max-width: 800px; margin: auto; }
-    input, select, textarea, button { display: block; width: 100%; margin: 10px 0; padding: 10px; }
-    h2 { margin-top: 2rem; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-    th { background: #eee; }
-    .nav { margin-top: 20px; text-align: center; }
-    .nav a { margin: 0 10px; text-decoration: none; color: #007bff; font-weight: bold; }
-    .event-box { background: #fff3cd; padding: 1rem; border-left: 5px solid #ffc107; margin-top: 1rem; }
+
+    body {
+      font-family: Arial, sans-serif;
+      padding: 1rem;
+      max-width: 1400px;
+      margin: auto;
+      background: #f4f6f8;
+    }
+
+    h2 {
+      margin-top: 2rem;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+
+      display: block;
+
+      width: 100%;
+
+      margin: 10px 0;
+
+      padding: 10px;
+
+      border-radius: 5px;
+
+      border: 1px solid #ccc;
+
+      box-sizing: border-box;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    table {
+
+      width: 100%;
+
+      border-collapse: collapse;
+
+      margin-bottom: 2rem;
+
+      background: white;
+    }
+
+    th,
+    td {
+
+      border: 1px solid #ccc;
+
+      padding: 8px;
+
+      text-align: center;
+
+      font-size: 0.9rem;
+    }
+
+    th {
+
+      background: #e9ecef;
+
+      position: sticky;
+
+      top: 0;
+    }
+
+    .nav {
+
+      margin-top: 20px;
+
+      margin-bottom: 20px;
+
+      text-align: center;
+    }
+
+    .nav a {
+
+      margin: 0 10px;
+
+      text-decoration: none;
+
+      color: #007bff;
+
+      font-weight: bold;
+    }
+
+    .event-box {
+
+      background: #fff3cd;
+
+      padding: 1rem;
+
+      border-left: 5px solid #ffc107;
+
+      margin-top: 1rem;
+    }
+
+    .system-box {
+
+      background: #d1ecf1;
+
+      padding: 1rem;
+
+      border-left: 5px solid #17a2b8;
+
+      margin-top: 1rem;
+    }
+
   </style>
+
 </head>
+
 <body>
-  <script>
-    const role = sessionStorage.getItem('role');
-    const pin = sessionStorage.getItem('pin');
-    if (role !== 'gm' || !pin) {
-      alert("Access denied. Please login as Game Master.");
-      window.location.href = "login.html";
+
+<script>
+
+  const role =
+    sessionStorage.getItem('role');
+
+  const pin =
+    sessionStorage.getItem('pin');
+
+  if (role !== 'gm' || !pin) {
+
+    alert(
+      "Access denied. Please login as Game Master."
+    );
+
+    window.location.href = "login.html";
+  }
+
+</script>
+
+<h2>
+  🧠 BioBoom Game Master Dashboard
+</h2>
+
+<div class="nav">
+
+  <a href="gm.html">
+    Dashboard
+  </a>
+
+  <a href="leaderboard.html"
+     target="_blank">
+
+     🏆 Leaderboard
+
+  </a>
+
+</div>
+
+<button onclick="generatePin()">
+  🔁 Generate New Player PIN
+</button>
+
+<p id="pinDisplay"></p>
+
+<!-- SCENARIO -->
+
+<h2>
+  🌍 Set Macroeconomic Scenario
+</h2>
+
+<label for="scenario">
+  Select Scenario
+</label>
+
+<select id="scenario">
+
+  <option value="Recession">
+    Recession
+  </option>
+
+  <option value="Boom">
+    Boom
+  </option>
+
+  <option value="Carbon Pricing Transition">
+    Carbon Pricing Transition
+  </option>
+
+  <option value="Trade Protection Escalation">
+    Trade Protection Escalation
+  </option>
+
+  <option value="Credit Liquidity Crunch">
+    Credit Liquidity Crunch
+  </option>
+
+  <option value="Tech Breakthrough">
+    Tech Breakthrough
+  </option>
+
+</select>
+
+<textarea id="policyNote"
+placeholder="Add policy notes, learning focus, or strategic guidance...">
+</textarea>
+
+<button onclick="setScenario()">
+  🚀 Launch Scenario
+</button>
+
+<div id="eventBox"
+     class="event-box"
+     style="display:none;">
+</div>
+
+<div class="system-box">
+
+<strong>Systemic Interpretation</strong><br><br>
+
+The scenario changes:
+
+<ul>
+
+<li>
+Sector attractiveness
+</li>
+
+<li>
+Innovation strategy viability
+</li>
+
+<li>
+Circularity importance
+</li>
+
+<li>
+Scaling feasibility
+</li>
+
+<li>
+Resilience requirements
+</li>
+
+</ul>
+
+Players must optimize strategic coherence rather than isolated variables.
+
+</div>
+
+<!-- SUBMISSIONS -->
+
+<h2>
+  📊 Strategic Submissions
+</h2>
+
+<button onclick="loadSubmissions()">
+  🔄 Refresh Submissions
+</button>
+
+<div id="submissionsBox">
+  Waiting for player inputs...
+</div>
+
+<!-- EXPORT -->
+
+<h2>
+  📄 Export & Reset
+</h2>
+
+<button onclick="exportData()">
+  📁 Export CSV
+</button>
+
+<button onclick="resetGame()">
+  ♻️ Reset Game
+</button>
+
+<script>
+
+const API =
+  'https://bioboomserver.onrender.com';
+
+// --------------------------------------------------
+// GENERATE PIN
+// --------------------------------------------------
+
+function generatePin() {
+
+  fetch(`${API}/generate-pin`, {
+
+    method: 'POST'
+
+  })
+
+  .then(res => res.json())
+
+  .then(data => {
+
+    document.getElementById('pinDisplay').innerText =
+
+      `✅ New PIN: ${data.pin}
+       (valid till
+       ${new Date(data.expires).toLocaleString()})`;
+
+  });
+
+}
+
+// --------------------------------------------------
+// SET SCENARIO
+// --------------------------------------------------
+
+function setScenario() {
+
+  const scenario =
+    document.getElementById('scenario').value;
+
+  const policyNote =
+    document.getElementById('policyNote').value;
+
+  fetch(`${API}/scenario`, {
+
+    method: 'POST',
+
+    headers: {
+      'Content-Type': 'application/json'
+    },
+
+    body: JSON.stringify({
+      scenario,
+      policyNote
+    })
+
+  })
+
+  .then(res => res.json())
+
+  .then(data => {
+
+    alert("Scenario launched.");
+
+    if (data.event) {
+
+      const box =
+        document.getElementById('eventBox');
+
+      box.style.display = 'block';
+
+      box.innerHTML =
+
+      `
+      🎲 <strong>Random Event:</strong>
+      <em>${data.event.name}</em><br><br>
+
+      ${data.event.description}
+      `;
     }
-  </script>
 
-  <h2>🧠 Game Master Dashboard</h2>
+  });
 
-  <div class="nav">
-    <a href="gm.html">Dashboard</a>
-    <a href="leaderboard.html" target="_blank">🏆 View Leaderboard</a>
-  </div>
+}
 
-  <button onclick="generatePin()">🔁 Generate New Player PIN</button>
-  <p id="pinDisplay"></p>
+// --------------------------------------------------
+// LOAD SUBMISSIONS
+// --------------------------------------------------
 
-  <h2>🌟 Set Scenario</h2>
-  <label for="scenario">Select Scenario:</label>
-  <select id="scenario">
-    <option value="Recession">Recession</option>
-    <option value="Boom">Boom</option>
-    <option value="Carbon Tax">Carbon Tax</option>
-    <option value="Policy Shift">Policy Shift</option>
-    <option value="Tech Breakthrough">Tech Breakthrough</option>
-  </select>
+function loadSubmissions() {
 
-  <textarea id="policyNote" placeholder="Add any policy notes or strategy tips..."></textarea>
-  <button onclick="setScenario()">🚀 Launch Scenario</button>
+  fetch(`${API}/submissions`)
 
-  <div id="eventBox" class="event-box" style="display:none;"></div>
+  .then(res => res.json())
 
-  <h2>📊 Submissions</h2>
-  <button onclick="loadSubmissions()">🔄 Refresh Submissions</button>
-  <div id="submissionsBox">Waiting for player inputs...</div>
+  .then(data => {
 
-  <h2>📄 Export & Reset</h2>
-  <button onclick="exportData()">📁 Export Submissions (CSV)</button>
-  <button onclick="resetGame()">♻️ Reset Game</button>
+    let html = '';
 
-  <script>
-    const API = 'https://bioboomserver.onrender.com';
+    for (const player in data) {
 
-    function generatePin() {
-      fetch(`${API}/generate-pin`, { method: 'POST' })
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('pinDisplay').innerText =
-            `✅ New PIN: ${data.pin} (valid till ${new Date(data.expires).toLocaleString()})`;
-        });
-    }
+      html += `<h3>👤 ${player}</h3>`;
 
-    function setScenario() {
-      const scenario = document.getElementById('scenario').value;
-      const policyNote = document.getElementById('policyNote').value;
-      fetch(`${API}/scenario`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scenario, policyNote })
-      })
-      .then(res => res.json())
-      .then(data => {
-        alert("Scenario set!");
-        if (data.event) {
-          const box = document.getElementById('eventBox');
-          box.style.display = 'block';
-          box.innerHTML = `🎲 <strong>Random Event:</strong> <em>${data.event.name}</em><br>${data.event.description}`;
-        }
+      html += `
+
+      <table>
+
+        <tr>
+
+          <th>Sector</th>
+
+          <th>Strategy</th>
+
+          <th>TRL</th>
+
+          <th>MRL</th>
+
+          <th>Circularity</th>
+
+          <th>Scale</th>
+
+          <th>Target</th>
+
+          <th>Coherence</th>
+
+          <th>ESG</th>
+
+          <th>Innovation</th>
+
+          <th>Resilience</th>
+
+          <th>Scenario ID</th>
+
+          <th>Feedback</th>
+
+        </tr>
+      `;
+
+      data[player].forEach(sub => {
+
+        html += `
+
+        <tr>
+
+          <td>${sub.sector}</td>
+
+          <td>${sub.strategy}</td>
+
+          <td>${sub.trl}</td>
+
+          <td>${sub.mrl}</td>
+
+          <td>${sub.circularity}</td>
+
+          <td>${sub.unitsBucket}</td>
+
+          <td>${sub.target}</td>
+
+          <td>${sub.coherenceScore}</td>
+
+          <td>${sub.esg}</td>
+
+          <td>${sub.innovation}</td>
+
+          <td>${sub.resilience}</td>
+
+          <td>${sub.scenarioID}</td>
+
+          <td>${sub.feedback}</td>
+
+        </tr>
+
+        `;
+
       });
+
+      html += `</table>`;
+
     }
 
-    function loadSubmissions() {
-      fetch(`${API}/submissions`)
-        .then(res => res.json())
-        .then(data => {
-          let html = '';
-          for (const player in data) {
-            html += `<h3>👤 ${player}</h3>`;
-            html += `
-              <table>
-                <tr>
-                  <th>Sector</th><th>Strategy</th><th>TRL</th><th>MRL</th><th>Units</th><th>Target</th><th>ESG</th><th>Feedback</th>
-                </tr>`;
-            data[player].forEach(sub => {
-              html += `
-                <tr>
-                  <td>${sub.sector}</td>
-                  <td>${sub.strategy}</td>
-                  <td>${sub.trl}</td>
-                  <td>${sub.mrl}</td>
-                  <td>${sub.units}</td>
-                  <td>${sub.target}</td>
-                  <td>${sub.esg}</td>
-                  <td>${sub.feedback}</td>
-                </tr>`;
-            });
-            html += `</table>`;
-          }
-          document.getElementById('submissionsBox').innerHTML = html || 'No submissions yet.';
-        });
+    document.getElementById('submissionsBox').innerHTML =
+
+      html || 'No submissions yet.';
+
+  });
+
+}
+
+// --------------------------------------------------
+// EXPORT CSV
+// --------------------------------------------------
+
+function exportData() {
+
+  fetch(`${API}/submissions`)
+
+  .then(res => res.json())
+
+  .then(data => {
+
+    let csv =
+
+`Player,Sector,Strategy,TRL,MRL,Circularity,Scale,Target,Coherence,ESG,Innovation,Resilience,ScenarioID,Feedback\n`;
+
+    for (const player in data) {
+
+      data[player].forEach(sub => {
+
+        csv +=
+
+`${player},
+${sub.sector},
+${sub.strategy},
+${sub.trl},
+${sub.mrl},
+${sub.circularity},
+${sub.unitsBucket},
+${sub.target},
+${sub.coherenceScore},
+${sub.esg},
+${sub.innovation},
+${sub.resilience},
+${sub.scenarioID},
+"${sub.feedback}"\n`;
+
+      });
+
     }
 
-    function exportData() {
-      fetch(`${API}/submissions`)
-        .then(res => res.json())
-        .then(data => {
-          let csv = 'Player,Sector,Strategy,TRL,MRL,Units,Target,ESG,Feedback\n';
-          for (const player in data) {
-            data[player].forEach(sub => {
-              csv += `${player},${sub.sector},${sub.strategy},${sub.trl},${sub.mrl},${sub.units},${sub.target},${sub.esg},"${sub.feedback}"\n`;
-            });
-          }
-          const blob = new Blob([csv], { type: 'text/csv' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `BioBoom_Submissions_${new Date().toISOString().slice(0,10)}.csv`;
-          a.click();
-          URL.revokeObjectURL(url);
-        });
-    }
+    const blob =
+      new Blob([csv], { type: 'text/csv' });
 
-    function resetGame() {
-      if (confirm("⚠️ Are you sure you want to reset the game? This will erase all submissions AND leaderboard.")) {
-        fetch(`${API}/reset`, { method: 'POST' })
-          .then(() => {
-            alert("✅ Game reset. All submissions and leaderboard cleared.");
-            document.getElementById('submissionsBox').innerHTML = "Waiting for player inputs...";
-            document.getElementById('eventBox').style.display = 'none';
-          });
-      }
-    }
-  </script>
+    const url =
+      URL.createObjectURL(blob);
+
+    const a =
+      document.createElement('a');
+
+    a.href = url;
+
+    a.download =
+      `BioBoom_Submissions_${new Date().toISOString().slice(0,10)}.csv`;
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+  });
+
+}
+
+// --------------------------------------------------
+// RESET
+// --------------------------------------------------
+
+function resetGame() {
+
+  if (
+
+    confirm(
+      "⚠️ Reset all submissions and leaderboard?"
+    )
+
+  ) {
+
+    fetch(`${API}/reset`, {
+
+      method: 'POST'
+
+    })
+
+    .then(() => {
+
+      alert(
+        "✅ Game reset completed."
+      );
+
+      document.getElementById('submissionsBox').innerHTML =
+
+        "Waiting for player inputs...";
+
+      document.getElementById('eventBox').style.display =
+
+        'none';
+
+    });
+
+  }
+
+}
+
+</script>
+
 </body>
 </html>
